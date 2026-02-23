@@ -26,10 +26,10 @@ const main = async () => {
         const latestArticles = await fetchHashnodeArticles(process.env.HASHNODE_BLOG_HOST);
 
         if (!latestArticles || latestArticles.length === 0) {
-            throw new Error("No articles found from Hashnode API");
+            throw new Error("No articles were returned from the Hashnode API");
         }
         
-        console.log(`[Hashnode Cards] Generating cards for ${latestArticles.length} articles...`);
+        console.log(`[Hashnode Cards] \u{1F3A8} Generating cards for ${latestArticles.length} articles...`);
 
         // Hashnode cards generation
         const outputDir = path.join(USER_REPO_PATH, 'cards');
@@ -41,7 +41,7 @@ const main = async () => {
             generatedCardsInfo.push(ret);
         }
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error('[Hashnode Cards] \u{274C}', error.message);
         process.exit(1);
     }
 };

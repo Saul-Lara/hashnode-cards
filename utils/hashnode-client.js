@@ -34,7 +34,7 @@ export async function fetchHashnodeArticles(blogHost){
         }
     }`
 
-    console.log('[Hashnode Cards] Fetching articles...');
+    console.log('[Hashnode Cards] \u{1F504} Fetching articles...');
 
     try {
         const response = await fetch(HASHNODE_API_BASE_URL, {
@@ -46,7 +46,9 @@ export async function fetchHashnodeArticles(blogHost){
         });
 
         if (!response.ok) {
-            throw new Error(`Hashnode API returned HTTP ${response.status}`);
+            throw new Error(
+                `Failed to fetch articles from Hashnode API.\n` +
+                `Status code: ${response.status}`);
         }
 
         const data = await response.json();
@@ -71,6 +73,7 @@ export async function fetchHashnodeArticles(blogHost){
         }))
         
     } catch (error) {
-        console.error("Hashnode fetch failed:", error.message);
+        console.error('[Hashnode Cards] \u{274C}', error.message);
+        process.exit(1);
     }
 }
