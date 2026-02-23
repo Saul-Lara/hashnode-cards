@@ -4,6 +4,7 @@ import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { fetchHashnodeArticles } from '../utils/hashnode-client.js';
+import { generateHashnodeCard } from '../utils/card-generator.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,8 +29,17 @@ const main = async () => {
             throw new Error("No articles found from Hashnode API");
         }
         
-        console.log(`Generating cards for ${latestArticles.length} articles...`);
+        console.log(`[Hashnode Cards] Generating cards for ${latestArticles.length} articles...`);
 
+        // Hashnode cards generation
+        const outputDir = path.join(USER_REPO_PATH, 'cards');
+        const templateDir = path.join(ACTION_PATH, 'cards-templates');
+
+        let generatedCardsInfo = []
+        for (const [index, article] of latestArticles.entries()){
+            let ret = await generateHashnodeCard(article, templateDir, outputDir, index + 1);
+            generatedCardsInfo.push(ret);
+        }
     } catch (error) {
         console.error('Error:', error.message);
         process.exit(1);
