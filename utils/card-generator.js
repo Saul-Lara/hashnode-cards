@@ -58,7 +58,7 @@ export async function generateHashnodeCard(article, templateDir, outputDir, inde
 	fs.writeFileSync(outputPath, template, "utf8");
 
 	return {
-		articleCardName: cardName,
+		articleCardName: `hashnode-article-card-${index}`,
 		articleUrl: article.url,
 	};
 }
