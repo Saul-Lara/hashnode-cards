@@ -1,0 +1,51 @@
+name: "Hashnode Cards Generator"
+description: "Generate cards from your Hashnode blog posts"
+author: "Saul Lara"
+
+inputs:
+  hashnode_blog_host:
+    description: "Hashnode blog host (e.g. blog.hashnode.dev)"
+    required: true
+  max_cards_to_generate:
+    description: "Maximum number of cards to generate"
+    required: false
+    default: "4"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: "20"
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        cd ${{ github.action_path }}
+        npm install
+
+    - name: Generate Hashnode Cards
+      shell: bash
+      env:
+        HASHNODE_BLOG_HOST: ${{ inputs.hashnode_blog_host }}
+        MAX_CARDS_TO_GENERATE: ${{ inputs.max_cards_to_generate }}
+      run: |
+        node ${{ github.action_path }}/script/generateCards.js
+
+    - name: Commit and push changes
+      shell: bash
+      run: |
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git add cards/*.svg README.md || git add README.md
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m ":robot: chore: auto-update README with generated Hashnode cards [skip ci]"
+          git push
+        fi
+
+branding:
+  icon: "grid"
+  color: "gray-dark"
