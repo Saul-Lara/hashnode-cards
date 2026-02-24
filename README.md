@@ -55,7 +55,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate Hashnode Cards
-        uses: name/hashnode-cards@v1
+        uses: Saul-Lara/hashnode-cards@v1.0.0
         with:
           hashnode_blog_host: ${{ vars.HASHNODE_BLOG_HOST }}
           max_cards_to_generate: 4
