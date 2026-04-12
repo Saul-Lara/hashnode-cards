@@ -10,6 +10,10 @@ inputs:
     description: "Maximum number of cards to generate"
     required: false
     default: "4"
+  card_type:
+    description: "Type of card to generate (large, horizontal)"
+    required: false
+    default: "large"
 
 runs:
   using: "composite"
@@ -30,6 +34,7 @@ runs:
       env:
         HASHNODE_BLOG_HOST: ${{ inputs.hashnode_blog_host }}
         MAX_CARDS_TO_GENERATE: ${{ inputs.max_cards_to_generate }}
+        CARD_TYPE: ${{ inputs.card_type }}
       run: |
         node ${{ github.action_path }}/script/generateCards.js
 
