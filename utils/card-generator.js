@@ -34,17 +34,42 @@ async function fetchImageAsBase64(url) {
 }
 
 /**
- * Generate SVG card for a hashnode article
- * @param {Object} article - Hashnode blog article object
- * @param {string} templateDir - Directory containing SVG templates
- * @param {string} outputDir - Directory to save generated cards
- * @param {string} index - Index of the article
- * @returns {Promise<Object>} Object with card filename and article url
+ * Get the SVG template for the selected card type
+ * @param {string} templateDir - Path to the directory containing SVG templates
+ * @param {string} cardType - Card type to generate (e.g., "large", "horizontal")
+ * @returns {string} Raw SVG template as a string
  */
 
-export async function generateHashnodeCard(article, templateDir, outputDir, index) {
-	const templatePath = path.join(templateDir, "simple-card.svg");
-	let template = fs.readFileSync(templatePath, "utf8");
+function getCardTypeTemplate(templateDir, cardType){
+	let templatePath;
+
+	switch(cardType){
+		case "large":
+			templatePath = path.join(templateDir, "simple-card.svg");
+			break;
+
+		case "horizontal":
+			templatePath = path.join(templateDir, "horizontal-card.svg");
+			break;
+	}
+
+	return fs.readFileSync(templatePath, "utf8");
+}
+
+/**
+ * Generates an SVG card for a Hashnode article
+ * @param {Object} article - Hashnode article data
+ * @param {string} templateDir - Path to the directory containing SVG templates
+ * @param {string} outputDir - Path to the directory where generated cards will be saved
+ * @param {number} index - Position of the article in the list
+ * @param {string} cardType - Type of card to generate
+ * @returns {Promise<{ articleCardName: string, articleUrl: string }>} Generated card metadata
+ */
+
+async function generateHashnodeCard(article, templateDir, outputDir, index, cardType) {
+	console.log(`[Hashnode Cards] \u{1F9E9} Generating card ${index}`);
+
+	let template = getCardTypeTemplate(templateDir, cardType);
 
 	template = template.replace(/\$\{article.title\}/g, article.title);
 	template = template.replace(/\$\{article.publishedAt\}/g, article.publishedAt);
@@ -61,4 +86,23 @@ export async function generateHashnodeCard(article, templateDir, outputDir, inde
 		articleCardName: `hashnode-article-card-${index}`,
 		articleUrl: article.url,
 	};
+}
+
+/**
+ * Generates SVG cards for Hashnode articles
+ * @param {Array} articles - Hashnode blog articles
+ * @param {string} cardType - Type of card to generate
+ * @param {Object} config - Card generator configuration
+ * @returns {Promise<Array<{ articleCardName: string, articleUrl: string }>>} Generated cards metadata
+ */
+
+export async function generateHashnodeCards(articles, cardType, config) {
+	let cardsInfo = []
+
+	for (const [index, article] of articles.entries()){
+		let cardInfo = await generateHashnodeCard(article, config.templateDir, config.outputDir, index + 1, cardType);
+		cardsInfo.push(cardInfo);
+	}
+
+	return cardsInfo;
 }

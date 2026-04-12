@@ -4,7 +4,7 @@ import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { fetchHashnodeArticles } from '../utils/hashnode-client.js';
-import { generateHashnodeCard } from '../utils/card-generator.js';
+import { generateHashnodeCards } from '../utils/card-generator.js';
 import { updateReadme } from '../utils/readme-updater.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -33,14 +33,13 @@ const main = async () => {
         console.log(`[Hashnode Cards] \u{1F3A8} Generating cards for ${latestArticles.length} articles...`);
 
         // Hashnode cards generation
-        const outputDir = path.join(USER_REPO_PATH, 'cards');
-        const templateDir = path.join(ACTION_PATH, 'cards-templates');
+        const cardType = process.env.CARD_TYPE || "large";
+        const configCardGenerator = {
+            templateDir: path.join(ACTION_PATH, 'cards-templates'),
+            outputDir: path.join(USER_REPO_PATH, 'cards'),
+        };
 
-        let generatedCardsInfo = []
-        for (const [index, article] of latestArticles.entries()){
-            let cardInfo = await generateHashnodeCard(article, templateDir, outputDir, index + 1);
-            generatedCardsInfo.push(cardInfo);
-        }
+        let generatedCardsInfo = await generateHashnodeCards(latestArticles, cardType, configCardGenerator);
 
         // Update README
         const readmePath = path.join(USER_REPO_PATH, 'README.md');
