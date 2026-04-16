@@ -25,6 +25,9 @@ export async function fetchHashnodeArticles(blogHost){
                         publishedAt
                         brief
                         url
+                        readTimeInMinutes
+                        views
+                        reactionCount
                         coverImage {
                             url
                         }
@@ -69,6 +72,9 @@ export async function fetchHashnodeArticles(blogHost){
             publishedAt: new Date(data.node.publishedAt).toLocaleDateString("en-US", options),
             brief: data.node.brief.replaceAll('\n', ' '),
             url: data.node.url,
+            views: data.node.views,
+            reactions: data.node.reactionCount,
+            readTime: data.node.readTimeInMinutes,
             coverImage: data.node.coverImage?.url ?? null
         }))
         
