@@ -1,0 +1,132 @@
+<svg width="500" height="200" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Background -->
+    <rect x="0" y="0" width="500" height="200" rx="10" fill="#ffffff" stroke="#e5e7eb"/>
+
+    <!-- Stats icon -->
+    <g transform="translate(172,12) scale(1)">
+        <path fill="#969696" d="m22.351 8.019l-6.37-6.37a5.63 5.63 0 0 0-7.962 0l-6.37 6.37a5.63 5.63 0 0 0 0 7.962l6.37 6.37a5.63 5.63 0 0 0 7.962 0l6.37-6.37a5.63 5.63 0 0 0 0-7.962M12 15.953a3.953 3.953 0 1 1 0-7.906a3.953 3.953 0 0 1 0 7.906"/>
+    </g>
+
+    <!-- Title card label -->
+    <text x="200" y="30"
+            font-size="18"
+            fill="#515151"
+            font-family="Segoe UI, Arial, sans-serif"
+            font-weight="700">
+        Hashnode Stats
+    </text>
+
+    <!-- Stats mode label -->
+    <text x="390" y="30"
+            font-size="14"
+            fill="#515151"
+            font-family="Segoe UI, Arial, sans-serif"
+            font-weight="400">
+        ${statsMode}
+    </text>
+
+    <!-- Articles -->
+    <g transform="translate(40,50)"> 
+        <!-- icon -->
+        <g transform="scale(1.2)">
+            <path fill="#969696" d="M3.5 23A1.5 1.5 0 0 1 2 21.5V6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v2h5a2 2 0 0 1 2 2v15H16.5a.5.5 0 0 0 0 1h13.415a1.5 1.5 0 0 1-1.415 1h-12a1.5 1.5 0 0 1-1.5-1.5V26H9.5A1.5 1.5 0 0 1 8 24.5V23zm13.415-1a1.5 1.5 0 0 1-1.415 1H22V9a1 1 0 0 0-1-1h-4v13H3.5a.5.5 0 0 0 0 1zM9 23h.5q-.264.001-.5.085zm7-3V6a1 1 0 0 0-1-1H5v15zm0 6v1.085q.236-.084.5-.085H29V13a1 1 0 0 0-1-1h-5v12H9.5a.5.5 0 0 0 0 1h13.415a1.5 1.5 0 0 1-1.415 1z"/>
+        </g>
+
+        <!-- value -->
+        <text x="50" y="20"
+                font-size="24"
+                fill="#515151"
+                font-family="Segoe UI, Arial, sans-serif"
+                font-weight="700">
+            ${articlesCount}
+        </text>
+
+        <!-- label -->
+        <text x="50" y="45"
+                font-size="18"
+                fill="#515151"
+                font-family="Segoe UI, Arial, sans-serif"
+                font-weight="400">
+            Articles
+        </text>
+    </g>
+
+    <!-- Reactions -->
+    <g transform="translate(40,130)">
+        <!-- icon -->
+        <g transform="scale(0.9)">
+            <path fill="#969696" d="M34 9c-4.2 0-7.9 2.1-10 5.4C21.9 11.1 18.2 9 14 9C7.4 9 2 14.4 2 21c0 11.9 22 24 22 24s22-12 22-24c0-6.6-5.4-12-12-12"/>
+        </g>
+
+        <!-- value -->
+        <text x="50" y="20"
+                font-size="24"
+                fill="#515151"
+                font-family="Segoe UI, Arial, sans-serif"
+                font-weight="700">
+            ${articlesReactionsCount}
+        </text>
+
+        <!-- label -->
+        <text x="50" y="45"
+                font-size="18"
+                fill="#515151"
+                font-family="Segoe UI, Arial, sans-serif"
+                font-weight="400">
+            Reactions
+        </text>
+    </g>
+
+    <!-- Views -->
+    <g transform="translate(300,50)">
+        <!-- icon -->
+        <g transform="scale(1.7)">
+            <g fill="none" stroke="#969696" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5"><path d="M22 12s-4.478 6-10 6s-10-6-10-6s4.478-6 10-6s10 6 10 6"/><path d="M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6"/></g>
+        </g>
+
+        <!-- value -->
+        <text x="50" y="20"
+                font-size="24"
+                fill="#515151"
+                font-family="Segoe UI, Arial, sans-serif"
+                font-weight="700">
+            ${articlesTotalViews}
+        </text>
+
+        <!-- label -->
+        <text x="50" y="45"
+                font-size="18"
+                fill="#515151"
+                font-family="Segoe UI, Arial, sans-serif"
+                font-weight="400">
+            Views
+        </text>
+    </g>
+
+    <!-- Reading Time -->
+    <g transform="translate(300,130)">
+        <!-- icon -->
+        <g transform="scale(1.8)">
+            <path fill="#969696" d="M10 20a10 10 0 1 1 0-20a10 10 0 0 1 0 20m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m-1-7.59V4h2v5.59l3.95 3.95l-1.41 1.41z"/>
+        </g>
+        <!-- value -->
+        <text x="50" y="20"
+            font-size="24"
+            fill="#515151"
+            font-family="Segoe UI, Arial, sans-serif"
+            font-weight="700">
+            ${articlesTotalReadTime}
+        </text>
+        
+        <!-- label -->
+        <text x="50" y="45"
+            font-size="18"
+            fill="#515151"
+            font-family="Segoe UI, Arial, sans-serif"
+            font-weight="400">
+            Min
+        </text>
+    </g>
+
+</svg>
