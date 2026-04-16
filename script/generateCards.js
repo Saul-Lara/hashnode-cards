@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
-import fs from 'fs';
+import fs, { stat } from 'fs';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { fetchHashnodeArticles } from '../utils/hashnode-client.js';
-import { generateHashnodeCards } from '../utils/card-generator.js';
+import { generateHashnodeCards, generateHashnodeStatsCard } from '../utils/card-generator.js';
 import { updateReadme } from '../utils/readme-updater.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -40,6 +40,30 @@ const main = async () => {
         };
 
         let generatedCardsInfo = await generateHashnodeCards(latestArticles, cardType, configCardGenerator);
+
+        // Hashnode stats card generation
+        const statsEnabled = process.env.HASHNODE_STATS === "true";
+        if(statsEnabled){
+            let hashnodeStats = {};
+            const statsMode = process.env.HASHNODE_STATS_MODE || "partial";
+            const allowedModes = ["partial", "full"];
+
+            if (!allowedModes.includes(statsMode)) {
+                throw new Error(`Invalid stats mode value: ${statsMode}`);
+            }
+
+            if(statsMode == "partial"){
+                hashnodeStats = {
+                    statsMode: `Last ${latestArticles.length} articles`,
+                    articles: latestArticles.length,
+                    views: latestArticles.reduce((acc, article) => acc + article.views, 0),
+                    reactions: latestArticles.reduce((acc, article) => acc + article.reactions, 0),
+                    readingTime: latestArticles.reduce((acc, article) => acc + article.readTime, 0)
+                };
+            }
+
+            await generateHashnodeStatsCard(hashnodeStats, configCardGenerator);
+        }
 
         // Update README
         const readmePath = path.join(USER_REPO_PATH, 'README.md');

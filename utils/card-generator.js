@@ -36,7 +36,7 @@ async function fetchImageAsBase64(url) {
 /**
  * Get the SVG template for the selected card type
  * @param {string} templateDir - Path to the directory containing SVG templates
- * @param {string} cardType - Card type to generate (e.g., "large", "horizontal")
+ * @param {string} cardType - Card type to generate (e.g., "large", "horizontal", "hashnodeStats")
  * @returns {string} Raw SVG template as a string
  */
 
@@ -50,6 +50,10 @@ function getCardTypeTemplate(templateDir, cardType){
 
 		case "horizontal":
 			templatePath = path.join(templateDir, "horizontal-card.svg");
+			break;
+
+		case "hashnodeStats":
+			templatePath = path.join(templateDir, "hashnode-stats-card.svg");
 			break;
 	}
 
@@ -105,4 +109,26 @@ export async function generateHashnodeCards(articles, cardType, config) {
 	}
 
 	return cardsInfo;
+}
+
+/**
+ * Generates an SVG card for Hashnode stats
+ * @param {Object} hashnodeStats - Hashnode statistics
+ * @param {Object} config - Card generator configuration
+ * @returns {Promise<void>}
+ */
+export async function generateHashnodeStatsCard(hashnodeStats, config){
+	console.log(`[Hashnode Cards] \u{1F4CA} Generating Hashnode stats card`);
+
+	let template = getCardTypeTemplate(config.templateDir, "hashnodeStats");
+
+	template = template.replace(/\$\{statsMode\}/g, hashnodeStats.statsMode);
+	template = template.replace(/\$\{articlesCount\}/g, hashnodeStats.articles);
+	template = template.replace(/\$\{articlesReactionsCount\}/g, hashnodeStats.reactions);
+	template = template.replace(/\$\{articlesTotalViews\}/g, hashnodeStats.views);
+	template = template.replace(/\$\{articlesTotalReadTime\}/g, hashnodeStats.readingTime);
+
+	let cardName = "hashnode-stats-card.svg";
+	const outputPath = path.join(config.outputDir, cardName);
+	fs.writeFileSync(outputPath, template, "utf8");
 }
