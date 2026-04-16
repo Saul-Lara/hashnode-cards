@@ -14,6 +14,14 @@ inputs:
     description: "Type of card to generate (large, horizontal)"
     required: false
     default: "large"
+  hashnode_stats:
+    description: "Enable Hashnode stats card generation (true/false)"
+    required: false
+    default: "false"
+  hashnode_stats_mode:
+    description: "Stats calculation mode: partial (latest posts) or full (all posts via pagination)"
+    required: false
+    default: "partial"
 
 runs:
   using: "composite"
@@ -35,6 +43,8 @@ runs:
         HASHNODE_BLOG_HOST: ${{ inputs.hashnode_blog_host }}
         MAX_CARDS_TO_GENERATE: ${{ inputs.max_cards_to_generate }}
         CARD_TYPE: ${{ inputs.card_type }}
+        HASHNODE_STATS: ${{ inputs.hashnode_stats }}
+        HASHNODE_STATS_MODE: ${{ inputs.hashnode_stats_mode }}
       run: |
         node ${{ github.action_path }}/script/generateCards.js
 
