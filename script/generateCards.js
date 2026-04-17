@@ -69,7 +69,7 @@ const main = async () => {
 
         // Update README
         const readmePath = path.join(USER_REPO_PATH, 'README.md');
-        updateReadme(readmePath, generatedCardsInfo);
+        updateReadme(readmePath, generatedCardsInfo, statsEnabled);
     } catch (error) {
         console.error('[Hashnode Cards] \u{274C}', error.message);
         process.exit(1);

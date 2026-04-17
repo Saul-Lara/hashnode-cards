@@ -6,7 +6,7 @@ import path from 'path';
  * @param {string} readmePath - Path to README.md file
  * @param {Array} generatedCardsInfo - Array of card data objects with timestamp and url
  */
-export function updateReadme(readmePath, generatedCardsInfo){
+export function updateReadme(readmePath, generatedCardsInfo, statsEnabled){
     if (!fs.existsSync(readmePath)) {
         throw new Error(
             `README.md not found at:\n${readmePath}\n\n` + 
@@ -17,8 +17,8 @@ export function updateReadme(readmePath, generatedCardsInfo){
     console.log('[Hashnode Cards] \u{1F4C4} Reading README.md from: \n', readmePath);
     let readme = fs.readFileSync(readmePath, 'utf8');
     
-    // Generate new content
-    let generatedCards = generatedCardsInfo.map((card, index) => {
+    // Hashnode article cards
+    let generatedArticleCards = generatedCardsInfo.map((card, index) => {
         let cardPath =`cards/${card.articleCardName}.svg`;
 
         return `  <a href="${card.articleUrl}">
@@ -28,6 +28,17 @@ export function updateReadme(readmePath, generatedCardsInfo){
     </picture>
   </a>`;
     }).join('\n');
+
+    // Stats card (optional)
+    let statsCard = "";
+    if(statsEnabled){
+        statsCard = `  <picture>
+      <source media="(prefers-color-scheme: light)" srcset="cards/hashnode-stats-card.svg">
+      <img alt="Hashnode Stats Card" src="cards/hashnode-stats-card.svg">
+  </picture>`;
+    }
+    
+    let generatedCards = statsEnabled ? `${generatedArticleCards}\n<br>\n${statsCard}` : generatedArticleCards ;
 
     let newContent = `<p align="center">\n${generatedCards}\n</p>`;
     
