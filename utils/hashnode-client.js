@@ -8,7 +8,7 @@ setGlobalDispatcher(agent);
 /**
  * Fetch hashnode articles from blog host url
  * @param {string} blogHost - Hashnode blog host
- * @returns {Promise<Array>} Array of LinkedIn posts
+ * @returns {Promise<Object>} Object with Hashnode articles
  */
 
 export async function fetchHashnodeArticles(blogHost){
@@ -82,4 +82,98 @@ export async function fetchHashnodeArticles(blogHost){
         console.error('[Hashnode Cards] \u{274C}', error.message);
         process.exit(1);
     }
+}
+
+/**
+ * Fetches full Hashnode statistics for a given blog host and map the response to compute totals
+ * @param {string} blogHost - Hashnode blog host
+ * @returns {Promise<Object>} Object with Hashnode full stats
+ */
+
+export async function fetchHashnodeFullStats(blogHost){
+    let articlesStats = await fetchAllHashnodeStatsPages(blogHost, 10);
+
+    return {
+        statsMode: "All the articles",
+        articles: articlesStats.length,
+        views: articlesStats.reduce((acc, article) => acc + article.views, 0),
+        reactions: articlesStats.reduce((acc, article) => acc + article.reactions, 0),
+        readingTime: articlesStats.reduce((acc, article) => acc + article.readTime, 0)
+    };
+}
+
+/**
+ * Fetches and aggregates full Hashnode statistics for a given blog host using pagination
+ * @param {string} blogHost - Hashnode blog host
+ * @param {number} limit - Number of items to fetch per request
+ * @param {string|null} cursor - Cursor for pagination (null for the first request)
+ * @param {Array<Object>} articlesStats - Accumulator for article statistics across pages
+ * @returns {Promise<{views: number, reactions: number, readingTime: number}>} Object with Hashnode full stats
+ */
+async function fetchAllHashnodeStatsPages(blogHost, limit, cursor = null, articlesStats = []) {
+    let query = `
+    query($host: String!, $limit: Int!, $cursor: String) {
+        publication(host: $host) {
+            posts(first: $limit, after: $cursor) {
+                edges {
+                    node {
+                        readTimeInMinutes
+                        views
+                        reactionCount
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    endCursor
+                }
+            }
+        }
+    }`
+
+    const queryVariables = {
+        host: blogHost,
+        limit: limit,
+        cursor: cursor || null
+    }
+    
+    try {
+        const response = await fetch(HASHNODE_API_BASE_URL, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ query: query, variables: queryVariables }),
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to fetch stats from Hashnode API.\n` +
+                `Status code: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data?.data?.publication) {
+            throw new Error("Invalid GraphQL response from Hashnode");
+        }
+
+        let articlesData = data.data.publication.posts.edges.map((data) => ({
+            views: data.node.views,
+            reactions: data.node.reactionCount,
+            readTime: data.node.readTimeInMinutes,
+        }))
+
+        const updatedArticleStats = [...articlesStats, ...articlesData];
+        
+        if(data.data.publication.posts.pageInfo.hasNextPage){
+            cursor = data.data.publication.posts.pageInfo.endCursor;
+            console.log(typeof cursor);
+            return fetchAllHashnodeStatsPages(blogHost, limit, cursor, updatedArticleStats);
+        }
+        
+        return updatedArticleStats;
+        
+    } catch (error) {
+        console.error('[Hashnode Cards] \u{274C}', error.message);
+        process.exit(1);
+    }
+
 }

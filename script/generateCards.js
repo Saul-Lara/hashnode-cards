@@ -3,7 +3,7 @@ import fs, { stat } from 'fs';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { fetchHashnodeArticles } from '../utils/hashnode-client.js';
+import { fetchHashnodeArticles, fetchHashnodeFullStats } from '../utils/hashnode-client.js';
 import { generateHashnodeCards, generateHashnodeStatsCard } from '../utils/card-generator.js';
 import { updateReadme } from '../utils/readme-updater.js';
 
@@ -60,8 +60,10 @@ const main = async () => {
                     reactions: latestArticles.reduce((acc, article) => acc + article.reactions, 0),
                     readingTime: latestArticles.reduce((acc, article) => acc + article.readTime, 0)
                 };
+            }else if(statsMode == "full"){
+                hashnodeStats = await fetchHashnodeFullStats(process.env.HASHNODE_BLOG_HOST);
             }
-
+            
             await generateHashnodeStatsCard(hashnodeStats, configCardGenerator);
         }
 
