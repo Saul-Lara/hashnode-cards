@@ -91,7 +91,8 @@ export async function fetchHashnodeArticles(blogHost){
  */
 
 export async function fetchHashnodeFullStats(blogHost){
-    let articlesStats = await fetchAllHashnodeStatsPages(blogHost, 10);
+    console.log('[Hashnode Cards] \u{1F504} Fetching full Hashnode statistics...');
+    let articlesStats = await fetchAllHashnodeStatsPages(blogHost, 20);
 
     return {
         statsMode: "All the articles",
